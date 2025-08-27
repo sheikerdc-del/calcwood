@@ -1,17 +1,43 @@
+/* Цветовые переменные: по умолчанию — тёмная тема */
 :root{
   --bg:#0b0f14;--bg2:#0f1722;--panel:#111821;--stroke:#1d2836;
+  --txt:#0b0f14; /* значение поменяем ниже для темной: в светлой станет #0b0f14 */
   --txt:#e6eef8;--muted:#9fb0c8;--primary:#5cc489;--accent:#6ea0ff;
   --green-bg:#0f2a1a; --green-fg:#bff5d0; --green-border:#1e7a45;
   --red-bg:#31171a; --red-fg:#ffd2d2; --red-border:#7a2a2a;
   --status-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 6px 16px rgba(0,0,0,.25);
 }
 
+/* Светлая тема (ручное переключение через data-theme="light") */
+:root[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f6f8fb;--panel:#ffffff;--stroke:#e3e8f0;
+  --txt:#0b0f14;--muted:#495770;--primary:#35bf7c;--accent:#4b86ff;
+  --green-bg:#e9fbf1; --green-fg:#0b5d35; --green-border:#8fe3b3;
+  --red-bg:#ffe9ec; --red-fg:#7a2a2a; --red-border:#ffc2c9;
+  --status-shadow: 0 0 0 1px rgba(0,0,0,0.04) inset, 0 6px 16px rgba(0,0,0,.10);
+}
+
+/* Если пользователь не выбирал тему и система светлая — можно задать авто-палитру
+   (будет переопределено ручным выбором через data-theme) */
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]){
+    --bg:#ffffff;--bg2:#f6f8fb;--panel:#ffffff;--stroke:#e3e8f0;
+    --txt:#0b0f14;--muted:#495770;--primary:#35bf7c;--accent:#4b86ff;
+    --green-bg:#e9fbf1; --green-fg:#0b5d35; --green-border:#8fe3b3;
+    --red-bg:#ffe9ec; --red-fg:#7a2a2a; --red-border:#ffc2c9;
+    --status-shadow: 0 0 0 1px rgba(0,0,0,0.04) inset, 0 6px 16px rgba(0,0,0,.10);
+  }
+}
+
+/* Базовая типографика и контейнер */
 html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
 a{color:var(--accent);text-decoration:none}
 .container{max-width:1080px;margin:0 auto;padding:0 16px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* Header */
 .site-header{position:sticky;top:0;background:rgba(11,15,20,.8);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--stroke);z-index:10}
+:root[data-theme="light"] .site-header{background:rgba(255,255,255,.8)}
 .header-wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
 .brand{display:flex;align-items:center;gap:10px;color:var(--txt)}
 .nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
@@ -63,7 +89,6 @@ h2{font-size:26px;margin:0 0 18px}
   from { transform: scale(.96); opacity: .0; }
   to   { transform: scale(1); opacity: 1; }
 }
-
 .status{
   display:inline-flex;align-items:center;gap:8px;margin-top:8px;
   padding:6px 10px;border-radius:999px;font-size:12px;line-height:1;
@@ -71,8 +96,14 @@ h2{font-size:26px;margin:0 0 18px}
   box-shadow: var(--status-shadow);
   animation: status-pop .18s ease-out both;
 }
+:root[data-theme="light"] .status{
+  background:#eef3ff;border-color:rgba(0,0,0,.06);
+}
 .status::before{
   content:"";width:8px;height:8px;border-radius:50%;background:#6b7280;box-shadow:0 0 0 2px rgba(255,255,255,.06) inset;
+}
+:root[data-theme="light"] .status::before{
+  box-shadow:0 0 0 2px rgba(0,0,0,.06) inset;
 }
 .status--up{
   background:var(--green-bg);color:var(--green-fg);border-color:var(--green-border);
