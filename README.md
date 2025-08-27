@@ -12,6 +12,3 @@
 - `covers/` — обложки карточек (WebP)
 - `logo.svg`, `hero.webp` — бренд-активы
 - `privacy.html`, `terms.html`
-  
-## Локальный запуск
-Откройте `index.html` в браузере. Для работы service worker нужен http(s) сервер: bash npx serve или python3 -m http.server 5173
