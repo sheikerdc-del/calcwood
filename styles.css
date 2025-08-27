@@ -33,18 +33,40 @@ a{color:var(--accent);text-decoration:none}
 .brand{display:flex;align-items:center;gap:10px;color:var(--txt)}
 .nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 
-/* Кнопки — минималистично */
+/* Кнопки — пилюльный стиль по умолчанию + чуть меньший шрифт */
 .btn{
+  --btn-py: 8px;        /* вертикальные отступы */
+  --btn-px: 12px;       /* горизонтальные отступы */
+  --btn-radius: 999px;  /* пилюля */
+  --btn-font: 14px;     /* был ~16px, сделали чуть меньше */
+  --btn-minh: 36px;     /* был 44px, компактнее, но все ещё удобно кликается мышью */
+
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:12px 14px;border-radius:12px;
+  padding:var(--btn-py) var(--btn-px);
+  border-radius:var(--btn-radius);
   border:1px solid var(--stroke);background:var(--bg2);color:var(--txt);
-  font-weight:600;line-height:1;min-height:44px;
+  font-weight:600;line-height:1.1;min-height:var(--btn-minh);
+  font-size:var(--btn-font);
   transition:transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
 }
 .btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.25);border-color:#243040}
 .btn:active{transform:translateY(0);box-shadow:0 3px 8px rgba(0,0,0,.2)}
 .btn.primary{background:#17222d;border-color:#223042;color:#dff6ea}
-.icon-btn{background:transparent;border:1px solid var(--stroke);border-radius:10px;color:var(--txt);padding:8px 12px;font-size:18px;min-height:40px}
+
+/* Кнопка-иконка — тоже пилюля и компактнее */
+.icon-btn{
+  --btn-py: 6px;
+  --btn-px: 10px;
+  --btn-radius: 999px;
+  --btn-font: 14px;
+  --btn-minh: 34px;
+
+  background:transparent;border:1px solid var(--stroke);
+  border-radius:var(--btn-radius);color:var(--txt);
+  padding:var(--btn-py) var(--btn-px);
+  font-size:var(--btn-font);
+  min-height:var(--btn-minh);
+}
 
 /* Фокус */
 :where(a,button).btn:focus-visible,
@@ -191,3 +213,12 @@ details{background:var(--panel);border:1px solid var(--stroke);border-radius:12p
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
 }
+
+/* Дополнительная доступность для тач-устройств:
+   если хотите сохранить крупный хит-таргет на сенсорных экранах, раскомментируйте блок ниже */
+/*
+@media (pointer: coarse){
+  .btn{ --btn-minh: 44px; --btn-py: 12px; --btn-px: 14px; --btn-font: 16px; }
+  .icon-btn{ --btn-minh: 40px; --btn-py: 8px; --btn-px: 12px; --btn-font: 16px; }
+}
+*/
