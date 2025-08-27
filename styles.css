@@ -130,7 +130,7 @@ h2{font-size:26px;margin:0 0 18px}
   padding:14px;
   min-height:300px;
 }
-.card__body h3{margin:0;font-size:18px;line-height:1.25}
+.card__body h3{margin:0;font-size:0px;line-height:1.25}
 .card__body p{margin:0;color:var(--muted)}
 
 /* Нижняя зона карточки: кнопки + статус строго внизу */
