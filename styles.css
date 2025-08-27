@@ -1,3 +1,4 @@
+/* css */
 /* Темная тема по умолчанию */
 :root{
   --bg:#0b0f14;--bg2:#0f1722;--panel:#111821;--stroke:#1d2836;
@@ -94,9 +95,43 @@ h2{font-size:26px;margin:0 0 18px}
 .card__media img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
 .card__media::after{content:"";position:absolute;inset:0;pointer-events:none;background: linear-gradient(0deg, rgba(0,0,0,.28), rgba(0,0,0,.18))}
 :root[data-theme="light"] .card__media::after{background: linear-gradient(0deg, rgba(0,0,0,.38), rgba(0,0,0,.24))}
-.card__body{padding:12px}
-.card__body h3{margin:4px 0 8px;font-size:18px}
-.card__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+
+/* ВНИМАНИЕ: фиксируем статус и кнопки по низу карточки через Grid */
+.card__body{
+  display:grid;
+  grid-template-rows: auto auto 1fr auto auto; /* h3 | p | spacer | status | actions */
+  gap:10px;
+  padding:12px;
+  min-height:260px; /* подгоните под дизайн */
+}
+.card__body h3{margin:4px 0 0;font-size:18px}
+.card__body p{margin:0;color:var(--muted)}
+
+/* Статус — предпоследняя строка (всегда над кнопками) */
+.card__body [data-status]{
+  grid-row:4;
+  align-self:end;
+  margin-top:0;
+}
+
+/* Кнопки — последняя строка, всегда у низа карточки */
+.card__actions{
+  grid-row:5;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:0;
+}
+
+/* Опционально: на ≥560px статус слева, кнопки справа в одной линии */
+@media (min-width:560px){
+  .card__body{
+    grid-template-rows:auto auto 1fr auto; /* h3 | p | spacer | bottom row */
+    grid-template-columns:1fr auto;        /* статус | кнопки */
+  }
+  .card__body [data-status]{grid-row:4;grid-column:1;align-self:center}
+  .card__actions{grid-row:4;grid-column:2;justify-self:end}
+}
 
 /* Skeletons */
 .skeleton{position:relative;min-height:240px;background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.08), rgba(255,255,255,.04))}
@@ -122,31 +157,26 @@ h2{font-size:26px;margin:0 0 18px}
 .status--down{background:var(--red-bg);color:var(--red-fg);border-color:var(--red-border)}
 .status--down::before{background:linear-gradient(180deg,#ff9f9f,#ff5f5f);box-shadow:0 0 0 2px rgba(255,95,95,.25)}
 
-/* Modal (вариант C: липкий низ внутри диалога) */
+/* Modal: надёжная схема через Grid — шапка | контент | футер */
 .modal{position:fixed;inset:0;display:grid;place-items:center}
 .modal[hidden]{display:none}
 .modal__overlay{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+
+/* Диалог — сетка; футер всегда внизу диалога, контент скроллится */
 .modal__dialog{
   position:relative;z-index:1;background:var(--panel);border:1px solid var(--stroke);border-radius:12px;
   max-width:min(1000px,96vw);width:96vw;max-height:90vh;
-  display:flex;flex-direction:column; /* ключ — делаем диалог гибким контейнером */
+  display:grid;
+  grid-template-rows:auto 1fr auto; /* header | body | footer */
+  overflow:hidden; /* скролл только у body */
 }
 .modal__header,.modal__footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-bottom:1px solid var(--stroke)}
 .modal__footer{border-top:1px solid var(--stroke);border-bottom:none}
 
-/* Прокручиваемое тело модалки; футер — липкий */
+/* Прокручиваемое тело модалки */
 .modal__body{
-  padding:0 10px 10px;
+  padding:10px;            /* при желании: 0 10px 10px */
   overflow:auto;           /* скроллим контент внутри диалога */
-  flex:1 1 auto;           /* тело занимает всё доступное пространство */
-}
-
-/* Липкий футер: всегда прижат к низу диалога (не окна), не перекрывает контент */
-.modal__footer{
-  position:sticky;
-  bottom:0;
-  background:var(--panel);
-  z-index:1;
 }
 
 /* Враппер фрейма и сам iframe */
