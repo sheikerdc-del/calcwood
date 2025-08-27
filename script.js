@@ -1,3 +1,4 @@
+// Список калькуляторов (редактируйте по необходимости)
 const calculators = [
   { id:'glue', name:'Калькулятор клея', url:'https://calcul-klei.onrender.com', desc:'Подбор количества клея для работ по дереву и отделке.', cover:'./covers/glue.webp' },
   { id:'fcs', name:'Калькулятор ФКС', url:'https://calc-fcs.onrender.com', desc:'Расчеты для плитных материалов по стандартам ФКС.', cover:'./covers/fcs.webp' },
@@ -7,6 +8,7 @@ const calculators = [
   { id:'fasteners', name:'Крепеж', url:'https://calculator-krepega.onrender.com', desc:'Подбор и расчет необходимого крепежа.', cover:'./covers/fasteners.webp' }
 ];
 
+// Узлы DOM
 const cardsRoot = document.getElementById('cards');
 const modal = document.getElementById('modal');
 const iframe = document.getElementById('calcFrame');
@@ -15,6 +17,7 @@ const openExternal = document.getElementById('openExternal');
 const themeBtn = document.getElementById('themeToggle');
 let lastFocused = null;
 
+// Рендер карточек
 function renderCards(){
   cardsRoot.innerHTML = calculators.map(c => `
     <article class="card" data-id="${c.id}">
@@ -35,6 +38,7 @@ function renderCards(){
 }
 renderCards();
 
+// Модальное окно
 function openModal(title, url){
   modalTitle.textContent = title;
   openExternal.href = url;
@@ -43,7 +47,8 @@ function openModal(title, url){
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
   lastFocused = document.activeElement;
-  modal.querySelector('.icon-btn').focus();
+  const closeBtn = modal.querySelector('.icon-btn');
+  if (closeBtn) closeBtn.focus();
 }
 function closeModal(){
   modal.hidden = true;
@@ -87,30 +92,27 @@ function handleHash(){
 window.addEventListener('hashchange', handleHash);
 window.addEventListener('DOMContentLoaded', handleHash);
 
-// Более устойчивый "пинг": считаем ONLINE, если есть сетевое соединение до origin.
-// 1) Пытаемся сделать fetch в no-cors (успех = промис resolve).
-// 2) Фолбэк: Image-пинг (успех = onload, но часто favicon отсутствует — это ок, у нас есть fetch).
+// Устойчивый "пинг" доступности origin
+// Логика: если fetch(no-cors) к / на origin завершается без сетевой ошибки — считаем ONLINE.
+// Если fetch упал (таймаут/ошибка сети), пробуем Image на /favicon.ico — как резерв.
 async function pingHost(url, timeout = 6000) {
   const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), timeout);
-
+  const timer = setTimeout(() => controller.abort(), timeout);
   try {
-    // Делаем запрос на корень с cache-busting, no-cors
     const u = new URL(url);
     const probe = `${u.origin}/?probe=${Date.now()}`;
-    // В no-cors промис резолвится даже при непрозрачном (“opaque”) ответе — это и есть наш сигнал "онлайн".
     await fetch(probe, { mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
-    clearTimeout(t);
+    clearTimeout(timer);
     return true;
   } catch {
-    clearTimeout(t);
-    // Фолбэк через Image: иногда fetch может падать из-за редких сетевых ограничений.
+    clearTimeout(timer);
+    // Резервный путь через Image
     try {
       await new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('img-timeout')), timeout);
+        const t = setTimeout(() => reject(new Error('img-timeout')), timeout);
         const img = new Image();
-        img.onload = () => { clearTimeout(timer); resolve(); };
-        img.onerror = () => { clearTimeout(timer); reject(new Error('img-error')); };
+        img.onload = () => { clearTimeout(t); resolve(); };
+        img.onerror = () => { clearTimeout(t); reject(new Error('img-error')); };
         const u = new URL(url);
         img.src = `${u.origin}/favicon.ico?_=${Date.now()}`;
       });
@@ -121,6 +123,7 @@ async function pingHost(url, timeout = 6000) {
   }
 }
 
+// Проверка статусов с интервалом
 async function checkAllCalculators(intervalMs = 120000) {
   async function run() {
     const tasks = calculators.map(async (c) => {
@@ -130,7 +133,6 @@ async function checkAllCalculators(intervalMs = 120000) {
       el.textContent = ok ? 'Онлайн' : 'Оффлайн';
       el.classList.toggle('status--up', ok);
       el.classList.toggle('status--down', !ok);
-      // Доступное описание для скринридеров
       el.setAttribute('aria-label', ok ? `${c.name}: доступен` : `${c.name}: недоступен`);
     });
     await Promise.allSettled(tasks);
@@ -138,8 +140,9 @@ async function checkAllCalculators(intervalMs = 120000) {
   await run();
   setInterval(run, intervalMs);
 }
+checkAllCalculators();
 
-// Тёмная/светлая тема
+// Переключатель темы (темная/светлая + корректировка theme-color)
 (function themeInit(){
   const key='theme', btn=themeBtn, root=document.documentElement;
   function apply(theme){
