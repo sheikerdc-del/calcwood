@@ -1,14 +1,35 @@
 {
-  "name": "CalcWood — онлайн-калькуляторы",
+  "name": "CalcWood — онлайн‑калькуляторы",
   "short_name": "CalcWood",
-  "start_url": "./",
+  "description": "Калькуляторы для клея, ФКС, веса древесины, 3D‑планки, пиломатериалов и крепежа.",
+  "lang": "ru-RU",
+  "dir": "ltr",
+  "start_url": "./?utm_source=pwa",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b0f14",
+  "orientation": "any",
   "theme_color": "#0b0f14",
+  "background_color": "#0b0f14",
+  "categories": ["utilities", "productivity"],
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "prefer_related_applications": false
 }
