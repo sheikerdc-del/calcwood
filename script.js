@@ -1,9 +1,9 @@
 // Данные калькуляторов
 const calculators = [
-  { id:'glue', name:'Калькулятор клея, растовра для плитки, кирпича и керамогранита', url:'https://calcul-klei.onrender.com', desc:'Подбор количества клея, раствора для работ с плиткой, керамогранитом и кирпичом.', cover:'./covers/glue.webp' },
+  { id:'glue', name:'Калькулятор клея и раствора', url:'https://calcul-klei.onrender.com', desc:'Расчет количества клея, раствора для работ с плиткой, керамогранитом и кирпичом.', cover:'./covers/glue.webp' },
   { id:'fcs', name:'Калькулятор крепежа для ФЦС', url:'https://calc-fcs.onrender.com', desc:'Расчеты крепежа и клямеров для фиброцементного сайдинга.', cover:'./covers/fcs.webp' },
   { id:'wood-weight', name:'Вес древесины', url:'https://kal-kuliator-vesa-drevesiny.onrender.com', desc:'Определение массы с учетом породы и влажности.', cover:'./covers/weight.webp' },
-  { id:'plank-3d', name:'Планка 3D (фасонные элемнты из металла)', url:'https://planka3d.onrender.com', desc:'Визуализация и расчет фасонных элементов из металла.', cover:'./covers/3d.webp' },
+  { id:'plank-3d', name:'Планка 3D (фасонные элементы из металла)', url:'https://planka3d.onrender.com', desc:'Визуализация и расчет фасонных элементов из металла.', cover:'./covers/3d.webp' },
   { id:'lumber', name:'Пиломатериалы', url:'https://calculator-pilomat.onrender.com', desc:'Объем, количество и стоимость пиломатериалов.', cover:'./covers/lumber.webp' },
   { id:'fasteners', name:'Крепеж', url:'https://calculator-krepega.onrender.com', desc:'Подбор и расчет необходимого крепежа для любого материала.', cover:'./covers/fasteners.webp' }
 ];
