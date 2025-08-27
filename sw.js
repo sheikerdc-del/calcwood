@@ -1,5 +1,5 @@
-// Версию меняйте при изменении набора статических файлов
-const CACHE = 'calcwood-v3';
+// Увеличивайте версию при каждом изменении набора статики
+const CACHE = 'calcwood-v4';
 
 const PRECACHE_URLS = [
   './',
@@ -9,20 +9,21 @@ const PRECACHE_URLS = [
   './manifest.webmanifest',
   './hero.webp',
   './og-image.jpg',
+  './offline.html',
   // Иконки
   './icons/icon-32.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-512.png',
   './icons/favicon.ico',
-  // Каверы
+  // Обложки
   './covers/glue.webp',
   './covers/fcs.webp',
   './covers/weight.webp',
   './covers/3d.webp',
   './covers/lumber.webp',
   './covers/fasteners.webp',
-  // Лого (если у вас оно в корне, иначе удалите/исправьте)
+  // Лого
   './logo.svg'
 ];
 
@@ -33,45 +34,45 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    (async () => {
-      // Удаляем старые кэши
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => (k !== CACHE ? caches.delete(k) : Promise.resolve())));
-      await self.clients.claim();
-    })()
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((k) => (k !== CACHE ? caches.delete(k) : Promise.resolve())));
+    await self.clients.claim();
+  })());
 });
 
-// Помощник: stale-while-revalidate для запросов того же origin
+// Stale-while-revalidate для того же origin
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE);
   const cached = await cache.match(request);
   const networkFetch = fetch(request).then((response) => {
-    // Успешный ответ — обновим кэш
     if (response && response.status === 200 && response.type !== 'opaque') {
       cache.put(request, response.clone());
     }
     return response;
   }).catch(() => null);
-
-  // Отдаём кэш сразу, если есть, иначе ждём сеть
   return cached || networkFetch;
 }
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  // Только GET
   if (request.method !== 'GET') return;
 
-  // Не трогаем кросс-оригин (калькуляторы на onrender.com и т.п.)
   try {
     const url = new URL(request.url);
+    // Кросс-оригин (внешние калькуляторы) не перехватываем
     if (url.origin !== self.location.origin) return;
 
-    // Для нашей статики — stale-while-revalidate
-    event.respondWith(staleWhileRevalidate(request));
+    // Основная стратегия
+    event.respondWith((async () => {
+      const response = await staleWhileRevalidate(request);
+      if (response) return response;
+      // Фолбэк офлайн
+      const cache = await caches.open(CACHE);
+      const offline = await cache.match('./offline.html');
+      return offline || new Response('Offline', { status: 503, statusText: 'Offline' });
+    })());
   } catch {
-    // В случае недопарсенного URL просто игнорируем
+    // Если URL не распарсился — ничего не делаем
   }
 });
