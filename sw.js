@@ -1,5 +1,5 @@
 // Увеличивайте версию при каждом изменении набора статики
-const CACHE = 'calcwood-v6';
+const CACHE = 'calcwood-v7';
 
 const PRECACHE_URLS = [
   './',
