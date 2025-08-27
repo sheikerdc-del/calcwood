@@ -1,4 +1,4 @@
-// Список калькуляторов (редактируйте по необходимости)
+// Список калькуляторов (редактируйте при необходимости)
 const calculators = [
   { id:'glue', name:'Калькулятор клея', url:'https://calcul-klei.onrender.com', desc:'Подбор количества клея для работ по дереву и отделке.', cover:'./covers/glue.webp' },
   { id:'fcs', name:'Калькулятор ФКС', url:'https://calc-fcs.onrender.com', desc:'Расчеты для плитных материалов по стандартам ФКС.', cover:'./covers/fcs.webp' },
@@ -8,8 +8,9 @@ const calculators = [
   { id:'fasteners', name:'Крепеж', url:'https://calculator-krepega.onrender.com', desc:'Подбор и расчет необходимого крепежа.', cover:'./covers/fasteners.webp' }
 ];
 
-// Узлы DOM
+// DOM-узлы
 const cardsRoot = document.getElementById('cards');
+const tmpl = document.getElementById('cardTemplate');
 const modal = document.getElementById('modal');
 const iframe = document.getElementById('calcFrame');
 const modalTitle = document.getElementById('modalTitle');
@@ -17,26 +18,76 @@ const openExternal = document.getElementById('openExternal');
 const themeBtn = document.getElementById('themeToggle');
 let lastFocused = null;
 
-// Рендер карточек
-function renderCards(){
-  cardsRoot.innerHTML = calculators.map(c => `
-    <article class="card" data-id="${c.id}">
-      <div class="card__media">
-        <img src="${c.cover}" alt="${c.name}" loading="lazy" decoding="async" width="1200" height="675">
-      </div>
-      <div class="card__body">
-        <h3>${c.name}</h3>
-        <p>${c.desc}</p>
-        <span class="status" aria-live="polite">Проверка...</span>
-        <div class="card__actions">
-          <button class="btn primary" data-action="open" data-url="${c.url}" aria-label="Открыть ${c.name}">Открыть</button>
-          <a class="btn ghost" href="${c.url}" target="_blank" rel="noopener noreferrer" data-action="ext">В новой вкладке</a>
-        </div>
-      </div>
-    </article>
-  `).join('');
+// Рендер карточек из template
+function renderCardsFromTemplate() {
+  if (!tmpl || !tmpl.content) {
+    console.warn('cardTemplate не найден — рендер по шаблону невозможен.');
+    return;
+  }
+  cardsRoot.setAttribute('aria-busy', 'true');
+
+  const frag = document.createDocumentFragment();
+  for (const c of calculators) {
+    const node = tmpl.content.cloneNode(true);
+
+    const article = node.querySelector('.card');
+    if (article) article.dataset.id = c.id;
+
+    const img = node.querySelector('[data-cover]');
+    if (img) {
+      img.src = c.cover;
+      img.alt = c.name;
+    }
+
+    const title = node.querySelector('[data-title]');
+    if (title) title.textContent = c.name;
+
+    const desc = node.querySelector('[data-desc]');
+    if (desc) desc.textContent = c.desc;
+
+    const btnOpen = node.querySelector('[data-open]');
+    if (btnOpen) {
+      btnOpen.setAttribute('aria-label', `Открыть ${c.name}`);
+      btnOpen.dataset.action = 'open';
+      btnOpen.dataset.url = c.url;
+    }
+
+    const linkExt = node.querySelector('[data-ext]');
+    if (linkExt) {
+      linkExt.href = c.url;
+      linkExt.setAttribute('aria-label', `Открыть ${c.name} в новой вкладке`);
+    }
+
+    const status = node.querySelector('[data-status]');
+    if (status) {
+      status.textContent = 'Проверка...';
+      status.classList.remove('status--up', 'status--down');
+      status.setAttribute('aria-label', `${c.name}: проверка доступности`);
+    }
+
+    frag.appendChild(node);
+  }
+
+  cardsRoot.innerHTML = '';
+  cardsRoot.appendChild(frag);
+  cardsRoot.setAttribute('aria-busy', 'false');
 }
-renderCards();
+renderCardsFromTemplate();
+
+// Делегирование кликов по кнопкам карточек
+cardsRoot.addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const action = btn.getAttribute('data-action');
+  const card = btn.closest('.card');
+  const id = card?.dataset.id;
+  const calc = calculators.find(x=>x.id === id);
+  if(!calc) return;
+  if(action === 'open'){
+    e.preventDefault();
+    openById(id, true);
+  }
+});
 
 // Модальное окно
 function openModal(title, url){
@@ -57,21 +108,6 @@ function closeModal(){
   if(lastFocused) lastFocused.focus();
   if(location.hash.startsWith('#calc/')) history.replaceState(null, '', '#');
 }
-
-cardsRoot.addEventListener('click', (e)=>{
-  const btn = e.target.closest('[data-action]');
-  if(!btn) return;
-  const action = btn.getAttribute('data-action');
-  const card = e.target.closest('.card');
-  const id = card?.getAttribute('data-id');
-  const calc = calculators.find(x=>x.id === id);
-  if(!calc) return;
-  if(action === 'open'){
-    e.preventDefault();
-    openById(id, true);
-  }
-});
-
 modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) closeModal(); });
 window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && !modal.hidden) closeModal(); });
 
@@ -93,8 +129,6 @@ window.addEventListener('hashchange', handleHash);
 window.addEventListener('DOMContentLoaded', handleHash);
 
 // Устойчивый "пинг" доступности origin
-// Логика: если fetch(no-cors) к / на origin завершается без сетевой ошибки — считаем ONLINE.
-// Если fetch упал (таймаут/ошибка сети), пробуем Image на /favicon.ico — как резерв.
 async function pingHost(url, timeout = 6000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
@@ -106,7 +140,7 @@ async function pingHost(url, timeout = 6000) {
     return true;
   } catch {
     clearTimeout(timer);
-    // Резервный путь через Image
+    // Резерв: Image на favicon
     try {
       await new Promise((resolve, reject) => {
         const t = setTimeout(() => reject(new Error('img-timeout')), timeout);
@@ -128,7 +162,7 @@ async function checkAllCalculators(intervalMs = 120000) {
   async function run() {
     const tasks = calculators.map(async (c) => {
       const ok = await pingHost(c.url, 6000);
-      const el = document.querySelector(`.card[data-id="${c.id}"] .status`);
+      const el = document.querySelector(`.card[data-id="${c.id}"] [data-status]`);
       if (!el) return;
       el.textContent = ok ? 'Онлайн' : 'Оффлайн';
       el.classList.toggle('status--up', ok);
@@ -142,24 +176,36 @@ async function checkAllCalculators(intervalMs = 120000) {
 }
 checkAllCalculators();
 
-// Переключатель темы (темная/светлая + корректировка theme-color)
+// Переключатель темы с сохранением выбора и обновлением theme-color
 (function themeInit(){
   const key='theme', btn=themeBtn, root=document.documentElement;
+
   function apply(theme){
     if(theme){ root.setAttribute('data-theme', theme); } else { root.removeAttribute('data-theme'); }
+    // Вычисляем, темный ли сейчас режим
     const isDark = (theme==='dark') || (!theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    // Текст на кнопке
     btn.textContent = isDark ? 'Светлая тема' : 'Тёмная тема';
+    // Обновляем мету theme-color для системной панели браузера
     let meta = document.querySelector('meta[name="theme-color"]');
     if(!meta){ meta = document.createElement('meta'); meta.name='theme-color'; document.head.appendChild(meta); }
     meta.content = isDark ? '#0b0f14' : '#ffffff';
   }
+
+  // Инициализация: берём сохранённое значение или авто
   const stored = localStorage.getItem(key);
   apply(stored || null);
+
+  // Клик по кнопке: dark -> light -> auto (null) -> dark ...
   btn.addEventListener('click', ()=>{
-    const current = root.getAttribute('data-theme');
+    const current = root.getAttribute('data-theme'); // 'dark' | 'light' | null
     const next = current === 'dark' ? 'light' : current === 'light' ? null : 'dark';
     if(next) localStorage.setItem(key, next); else localStorage.removeItem(key);
     apply(next);
   });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(!localStorage.getItem(key)) apply(null); });
+
+  // Реакция на смену системной темы (только если пользователь не зафиксировал выбор)
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{
+    if(!localStorage.getItem(key)) apply(null);
+  });
 })();
