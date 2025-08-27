@@ -1,1 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>CalcWood — онлайн‑калькуляторы для древесины и крепежа</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Бесплатные онлайн-калькуляторы: клей, ФКС, вес древесины, планка 3D, пиломатериалы, крепеж. Быстро и точно, работает на мобильных.">
+  <link rel="canonical" href="https://sheikerdc-del.github.io/calcwood/">
+  <meta property="og:title" content="CalcWood — онлайн‑калькуляторы для дерева и крепежа">
+  <meta property="og:description" content="Расчеты в 1 клик: клей, ФКС, вес, планка 3D, пиломатериалы, крепеж.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sheikerdc-del.github.io/calcwood/">
+  <meta property="og:image" content="https://sheikerdc-del.github.io/calcwood/og-image.jpg">
+  <meta name="theme-color" content="#0b0f14">
 
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./logo.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
+
+  <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-wrap">
+      <a href="./" class="brand">
+        <img src="./logo.svg" alt="CalcWood" width="36" height="36">
+        <span>CalcWood</span>
+      </a>
+      <nav class="nav">
+        <a href="#calculators">Калькуляторы</a>
+        <a href="#benefits">Преимущества</a>
+        <a href="#faq">FAQ</a>
+        <a href="./privacy.html">Политика</a>
+        <a href="./terms.html">Условия</a>
+        <button id="themeToggle" class="btn ghost" aria-label="Переключить тему">Тёмная тема</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-wrap">
+        <div class="hero-text">
+          <h1>Онлайн‑калькуляторы для древесины, пиломатериалов и крепежа</h1>
+          <p>Быстрые и точные расчеты прямо в браузере. Открывайте в 1 клик, работайте на любом устройстве.</p>
+          <div class="cta">
+            <a href="#calculators" class="btn primary">Выбрать калькулятор</a>
+            <a href="#benefits" class="btn ghost">Почему мы</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <img src="./hero.webp" alt="" width="1200" height="600" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </section>
+
+    <section id="benefits" class="benefits">
+      <div class="container">
+        <h2>Преимущества</h2>
+        <ul class="benefit-list">
+          <li><h3>Точность</h3><p>Проверенные формулы и актуальные коэффициенты.</p></li>
+          <li><h3>Экономия времени</h3><p>Готовые результаты без ручных вычислений.</p></li>
+          <li><h3>Доступность</h3><p>Работает на мобильных и десктопах.</p></li>
+          <li><h3>Бесплатно</h3><p>Без регистрации и оплаты.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="calculators" class="calculators">
+      <div class="container">
+        <h2>Калькуляторы</h2>
+        <div id="cards" class="grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="faq" class="faq">
+      <div class="container">
+        <h2>Частые вопросы</h2>
+        <details><summary>Можно ли открыть калькулятор в новой вкладке?</summary><p>Да, на карточке есть кнопка «В новой вкладке».</p></details>
+        <details><summary>Добавите новые калькуляторы?</summary><p>Да, планируем расширять список и будем рады предложениям.</p></details>
+        <details><summary>Почему статус «оффлайн»?</summary><p>Сайт калькулятора не отвечает. Попробуйте позже или откройте напрямую.</p></details>
+        <details><summary>Работает ли без интернета?</summary><p>Лендинг доступен офлайн, но сами калькуляторы — внешние, требуют интернет.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>© CalcWood, 2025</p>
+      <div class="legal">
+        <a href="./privacy.html">Политика конфиденциальности</a>
+        <a href="./terms.html">Пользовательское соглашение</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__dialog" role="document">
+      <header class="modal__header">
+        <h3 id="modalTitle"></h3>
+        <button class="icon-btn" aria-label="Закрыть" data-close>&times;</button>
+      </header>
+      <div class="modal__body">
+        <iframe id="calcFrame" title="Калькулятор" loading="lazy" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>
+      </div>
+      <footer class="modal__footer">
+        <a id="openExternal" class="btn ghost" target="_blank" rel="noopener noreferrer">В новой вкладке</a>
+      </footer>
+    </div>
+  </div>
+
+  <script src="./script.js" defer></script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js', {scope: './'}));
+    }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question","name":"Можно ли открыть калькулятор в новой вкладке?","acceptedAnswer":{"@type":"Answer","text":"Да, на карточке есть кнопка «В новой вкладке»."}},
+      {"@type": "Question","name":"Добавите новые калькуляторы?","acceptedAnswer":{"@type":"Answer","text":"Да, планируем расширять список и будем рады предложениям."}},
+      {"@type": "Question","name":"Почему статус «оффлайн»?","acceptedAnswer":{"@type":"Answer","text":"Сайт калькулятора не отвечает. Попробуйте позже или откройте напрямую."}},
+      {"@type": "Question","name":"Работает ли без интернета?","acceptedAnswer":{"@type":"Answer","text":"Лендинг доступен офлайн, калькуляторы внешние — интернет обязателен."}}
+    ]
+  }
+  </script>
+</body>
+</html>

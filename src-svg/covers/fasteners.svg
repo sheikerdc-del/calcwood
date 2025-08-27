@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="675" viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Крепеж">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0F1722"/><stop offset="1" stop-color="#111821"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5CC489"/><stop offset="1" stop-color="#6EA0FF"/></linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <g transform="translate(80,80)">
+    <text x="0" y="0" font-family="Inter, Roboto, Arial" font-size="56" font-weight="700" fill="#E6EEF8" dominant-baseline="hanging">Крепеж</text>
+    <text x="0" y="84" font-family="Inter, Roboto, Arial" font-size="28" fill="#9FB0C8">Подбор и расчет необходимого крепежа</text>
+  </g>
+  <g transform="translate(820,210)">
+    <circle cx="60" cy="60" r="40" fill="#0B0F14" stroke="#1D2836" stroke-width="2"/>
+    <rect x="120" y="40" width="140" height="40" rx="10" fill="#0B0F14" stroke="#1D2836"/>
+    <rect x="120" y="100" width="140" height="14" rx="7" fill="url(#accent)"/>
+    <rect x="120" y="124" width="140" height="14" rx="7" fill="#162130"/>
+    <rect x="120" y="148" width="140" height="14" rx="7" fill="#162130"/>
+  </g>
+</svg>

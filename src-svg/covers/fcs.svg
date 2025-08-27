@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="675" viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Калькулятор ФКС">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0F1722"/><stop offset="1" stop-color="#111821"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5CC489"/><stop offset="1" stop-color="#6EA0FF"/></linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <g transform="translate(80,80)">
+    <text x="0" y="0" font-family="Inter, Roboto, Arial" font-size="56" font-weight="700" fill="#E6EEF8" dominant-baseline="hanging">Калькулятор ФКС</text>
+    <text x="0" y="84" font-family="Inter, Roboto, Arial" font-size="28" fill="#9FB0C8">Расчеты для плитных материалов</text>
+  </g>
+  <g transform="translate(820,220)">
+    <rect width="260" height="320" rx="20" fill="#0B0F14" stroke="#1D2836"/>
+    <rect x="40" y="40" width="180" height="40" rx="10" fill="#111821" stroke="#1D2836"/>
+    <rect x="40" y="100" width="180" height="40" rx="10" fill="#111821" stroke="#1D2836"/>
+    <rect x="40" y="160" width="180" height="20" rx="10" fill="url(#accent)"/>
+  </g>
+</svg>

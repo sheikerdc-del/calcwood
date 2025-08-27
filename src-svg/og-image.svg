@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CalcWood OG">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B0F14"/><stop offset="1" stop-color="#0E141C"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5CC489"/><stop offset="1" stop-color="#6EA0FF"/></linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g transform="translate(80,120)">
+    <rect width="1040" height="390" rx="24" fill="#111821" stroke="#1D2836"/>
+    <g transform="translate(40,40)">
+      <text x="0" y="0" font-family="Inter, Roboto, Arial" font-size="64" font-weight="700" fill="#E6EEF8" dominant-baseline="hanging">Онлайн‑калькуляторы для дерева</text>
+      <text x="0" y="120" font-family="Inter, Roboto, Arial" font-size="28" fill="#9FB0C8">Клей • ФКС • Вес • Планка 3D • Пиломатериалы • Крепеж</text>
+    </g>
+    <g transform="translate(760,60)">
+      <rect width="200" height="200" rx="36" fill="#0F1722" stroke="#1D2836"/>
+      <path d="M36 100c0-26 18-46 44-46h22v20H80c-14 0-24 10-24 26s10 26 24 26h22v20H80c-26 0-44-20-44-46z" fill="url(#g)"/>
+      <path d="M88 54h24c26 0 44 20 44 46s-18 46-44 46H88v-20h24c14 0 24-10 24-26s-10-26-24-26H88V54z" fill="url(#g)"/>
+    </g>
+  </g>
+  <text x="80" y="580" font-family="Inter, Roboto, Arial" font-size="22" fill="#9FB0C8">sheikerdc-del.github.io/calcwood</text>
+</svg>

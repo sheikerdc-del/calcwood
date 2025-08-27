@@ -1,0 +1,13 @@
+{
+  "name": "calcwood-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets:icons": "node tools/build-icons.mjs",
+    "assets:images": "node tools/build-images.mjs",
+    "assets:all": "npm run assets:icons && npm run assets:images"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.4"
+  }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CalcWood maskable">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#0E141C"/><stop offset="100%" stop-color="#0B0F14"/></radialGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5CC489"/><stop offset="1" stop-color="#6EA0FF"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <g transform="translate(96,96)">
+    <rect width="320" height="320" rx="64" fill="#111821" stroke="#1D2836"/>
+    <g transform="translate(40,40)">
+      <path d="M0 120c0-35 24-62 60-62h30v24H60c-19 0-33 13-33 38s14 38 33 38h30v24H60c-36 0-60-27-60-62z" fill="url(#g)"/>
+      <path d="M90 58h32c35 0 60 27 60 62s-25 62-60 62H90v-24h32c19 0 33-13 33-38s-14-38-33-38H90V58z" fill="url(#g)"/>
+    </g>
+  </g>
+</svg>
