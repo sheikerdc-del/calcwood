@@ -6,8 +6,8 @@
   </defs>
   <rect width="1200" height="675" fill="url(#bg)"/>
   <g transform="translate(80,80)">
-    <text x="0" y="0" font-family="Inter, Roboto, Arial" font-size="56" font-weight="700" fill="#E6EEF8" dominant-baseline="hanging">Калькулятор клея</text>
-    <text x="0" y="84" font-family="Inter, Roboto, Arial" font-size="28" fill="#9FB0C8">Подбор количества и расход</text>
+    <text x="0" y="0" font-family="Inter, Roboto, Arial" font-size="56" font-weight="700" fill="#E6EEF8" dominant-baseline="hanging">Калькулятор клея и раствора</text>
+    <text x="0" y="84" font-family="Inter, Roboto, Arial" font-size="28" fill="#9FB0C8">Подбор количества и расход клея и раствора для плитки, кирпича и керамогранита</text>
   </g>
   <g transform="translate(820,220)">
     <rect width="260" height="320" rx="20" fill="#0B0F14" stroke="#1D2836"/>
