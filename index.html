@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <title>CalcWood — онлайн‑калькуляторы для древесины и крепежа</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Бесплатные онлайн-калькуляторы: раствор для кирича, клей для плитки и керамогранита, саморезы и клямеры для ФЦС, вес древесины, фасонные изделия для металла, пиломатериалы, крепеж. Быстро и точно, работает на мобильных.">
+  <meta name="description" content="Бесплатные онлайн-калькуляторы: клей, крепеж для фиброцементного сайдинга, вес древесины, фасонные изделия из металла, пиломатериалы, крепеж. Быстро и точно, работает на мобильных.">
   <link rel="canonical" href="https://sheikerdc-del.github.io/calcwood/">
   <meta name="referrer" content="no-referrer">
 
   <!-- Open Graph -->
   <meta property="og:title" content="CalcWood — онлайн‑калькуляторы для дерева и крепежа">
-  <meta property="og:description" content="Расчеты в 1 клик: клей, раствор, вес, фасонные изделия, пиломатериалы, крепеж.">
+  <meta property="og:description" content="Расчеты в 1 клик: клей, раствор, саморезы и клямеры для ФЦС, вес, 3D‑планка, пиломатериалы, крепеж.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sheikerdc-del.github.io/calcwood/">
   <meta property="og:image" content="https://sheikerdc-del.github.io/calcwood/og-image.jpg">
@@ -18,7 +18,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="CalcWood — онлайн‑калькуляторы">
-  <meta name="twitter:description" content="Клей, ФЦС, вес, фасонные изделия, пиломатериалы, крепеж.">
+  <meta name="twitter:description" content="Клей, ФЦС, вес, 3D‑планка, пиломатериалы, крепеж.">
   <meta name="twitter:image" content="https://sheikerdc-del.github.io/calcwood/og-image.jpg">
 
   <meta name="theme-color" content="#0b0f14">
@@ -32,6 +32,7 @@
   <!-- Preloads -->
   <link rel="preload" href="./styles.css" as="style">
   <link rel="preload" href="./hero.webp" as="image" imagesrcset="./hero.webp" imagesizes="100vw">
+  <link rel="preload" href="./sprite.svg" as="image" imagesrcset="./sprite.svg">
 
   <link href="./styles.css" rel="stylesheet">
 </head>
@@ -39,7 +40,9 @@
   <header class="site-header">
     <div class="container header-wrap">
       <a href="./" class="brand" aria-label="На главную CalcWood">
-        <img src="./logo.svg" alt="CalcWood" width="36" height="36">
+        <svg class="icon lg" aria-hidden="true" focusable="false">
+          <use href="./sprite.svg#logo-calcwood"></use>
+        </svg>
         <span>CalcWood</span>
       </a>
       <nav class="nav" aria-label="Основная навигация">
@@ -48,7 +51,12 @@
         <a href="#faq">FAQ</a>
         <a href="./privacy.html">Политика</a>
         <a href="./terms.html">Условия</a>
-        <button id="themeToggle" class="btn ghost" aria-label="Переключить тему" aria-pressed="false">Тёмная тема</button>
+        <button id="themeToggle" class="btn ghost" aria-label="Переключить тему" aria-pressed="false">
+          <svg id="themeIcon" class="icon md" aria-hidden="true" focusable="false">
+            <use href="./sprite.svg#icon-moon"></use>
+          </svg>
+          Тёмная тема
+        </button>
       </nav>
     </div>
   </header>
@@ -57,7 +65,7 @@
     <section class="hero" aria-labelledby="heroTitle">
       <div class="container hero-wrap">
         <div class="hero-text">
-          <h1 id="heroTitle">Онлайн‑калькуляторы для древесины, пиломатериалов, крепежа, клея и раствора</h1>
+          <h1 id="heroTitle">Онлайн‑калькуляторы для древесины, пиломатериалов и крепежа</h1>
           <p>Быстрые и точные расчеты прямо в браузере. Открывайте в 1 клик, работайте на любом устройстве.</p>
           <div class="cta" role="group" aria-label="Быстрые действия">
             <a href="#calculators" class="btn primary">Выбрать калькулятор</a>
@@ -86,13 +94,14 @@
       <div class="container">
         <h2 id="calculatorsTitle">Калькуляторы</h2>
 
-        <!-- Поиск/фильтр -->
         <form id="filterForm" class="filter" role="search" aria-label="Фильтр калькуляторов">
           <input id="search" name="q" type="search" placeholder="Поиск по названию или описанию..." aria-label="Поиск" autocomplete="off" />
-          <button type="reset" class="btn ghost" aria-label="Сбросить поиск">Сброс</button>
+          <button type="reset" class="btn ghost" aria-label="Сбросить поиск">
+            <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-reset"></use></svg>
+            Сброс
+          </button>
         </form>
 
-        <!-- Контейнер списка -->
         <div
           id="cards"
           class="grid"
@@ -100,7 +109,6 @@
           aria-live="polite"
           aria-busy="false"
           aria-describedby="calcStatusNote">
-          <!-- Скелетоны на время загрузки -->
           <div class="card skeleton" role="listitem" aria-hidden="true"></div>
           <div class="card skeleton" role="listitem" aria-hidden="true"></div>
           <div class="card skeleton" role="listitem" aria-hidden="true"></div>
@@ -109,7 +117,6 @@
           Статусы обновляются автоматически. «Онлайн» — калькулятор доступен; «Оффлайн» — временно недоступен.
         </p>
 
-        <!-- Шаблон карточки -->
         <template id="cardTemplate">
           <article class="card" role="listitem">
             <div class="card__media">
@@ -120,8 +127,14 @@
               <p data-desc></p>
               <span class="status" role="status" aria-live="polite" data-status>Проверка...</span>
               <div class="card__actions">
-                <button class="btn primary" data-action="open" data-open>Открыть</button>
-                <a class="btn ghost" target="_blank" rel="noopener noreferrer" data-ext>В новой вкладке</a>
+                <button class="btn primary" data-action="open" data-open>
+                  <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-calc"></use></svg>
+                  Открыть
+                </button>
+                <a class="btn ghost" target="_blank" rel="noopener noreferrer" data-ext>
+                  <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-external"></use></svg>
+                  В новой вкладке
+                </a>
               </div>
             </div>
           </article>
@@ -176,8 +189,13 @@
       <header class="modal__header">
         <h3 id="modalTitle">Калькулятор</h3>
         <div class="modal__tools">
-          <button id="copyLink" class="btn ghost" aria-label="Скопировать ссылку на этот калькулятор">Скопировать ссылку</button>
-          <button class="icon-btn" aria-label="Закрыть" data-close>&times;</button>
+          <button id="copyLink" class="btn ghost" aria-label="Скопировать ссылку на этот калькулятор">
+            <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-copy"></use></svg>
+            Скопировать ссылку
+          </button>
+          <button class="icon-btn" aria-label="Закрыть" data-close>
+            <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-close"></use></svg>
+          </button>
         </div>
       </header>
       <div class="modal__body">
@@ -192,17 +210,22 @@
           </iframe>
           <div id="frameNotice" class="frame-notice" hidden>
             <p>Не удалось загрузить калькулятор в окне. Откройте в новой вкладке.</p>
-            <a id="openExternal" class="btn primary" target="_blank" rel="noopener noreferrer">В новой вкладке</a>
+            <a id="openExternal" class="btn primary" target="_blank" rel="noopener noreferrer">
+              <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-external"></use></svg>
+              В новой вкладке
+            </a>
           </div>
         </div>
       </div>
       <footer class="modal__footer">
-        <a id="openExternalFooter" class="btn ghost" target="_blank" rel="noopener noreferrer">В новой вкладке</a>
+        <a id="openExternalFooter" class="btn ghost" target="_blank" rel="noopener noreferrer">
+          <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-external"></use></svg>
+          В новой вкладке
+        </a>
       </footer>
     </div>
   </div>
 
-  <!-- Скрипты -->
   <script src="./script.js" defer></script>
   <script>
     if('serviceWorker' in navigator){
