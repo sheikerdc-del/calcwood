@@ -39,7 +39,7 @@ a{color:var(--accent);text-decoration:none}
   --btn-px: 12px;       /* горизонтальные отступы */
   --btn-radius: 999px;  /* пилюля */
   --btn-font: 14px;     /* был ~16px, сделали чуть меньше */
-  --btn-minh: 36px;     /* был 44px, компактнее, но все ещё удобно кликается мышью */
+  --btn-minh: 36px;     /* был 44px, теперь компактнее */
 
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:var(--btn-py) var(--btn-px);
@@ -49,6 +49,10 @@ a{color:var(--accent);text-decoration:none}
   font-size:var(--btn-font);
   transition:transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
 }
+/* Иконки внутри кнопок подстраиваются под кегль */
+.btn .icon{width:1em;height:1em;}
+
+/* Ховеры/активные состояния */
 .btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.25);border-color:#243040}
 .btn:active{transform:translateY(0);box-shadow:0 3px 8px rgba(0,0,0,.2)}
 .btn.primary{background:#17222d;border-color:#223042;color:#dff6ea}
@@ -82,7 +86,7 @@ input[type="search"]:focus-visible{
 /* Hero */
 .hero{padding:40px 0 10px;border-bottom:1px solid var(--stroke)}
 .hero-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
-.hero-text h1{margin:.2em 0 .3em;font-size:34px;line-height:1.15}
+.hero-text h1{margin:.2em 0 .3ем;font-size:34px;line-height:1.15}
 .hero-text p{color:var(--muted)}
 .cta{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
 .hero-art img{width:100%;height:auto;border-radius:16px;border:1px solid var(--stroke);box-shadow:0 16px 40px rgba(0,0,0,.35)}
@@ -141,6 +145,18 @@ h2{font-size:26px;margin:0 0 18px}
 .card__actions{display:flex;gap:10px;align-items:stretch}
 .card__actions > .btn{flex:1 1 0;min-width:0}
 .card__actions .icon{flex:0 0 auto}
+
+/* ВЫРАВНИВАЕМ кнопки по размеру со статусом (в карточках) */
+.card__actions .btn{
+  padding:7px 12px;     /* как у .status */
+  min-height:auto;
+  height:auto;
+  font-size:12px;       /* как у .status */
+  line-height:1;        /* как у .status */
+  border-radius:999px;  /* пилюля */
+}
+/* Иконка в «кнопке с иконкой» — компактная как статус */
+.card__actions .btn .icon{width:1em;height:1em;} /* 1em = 12px при font-size:12px в кнопке */
 
 /* Статус */
 @keyframes status-pop { from { transform: scale(.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -214,8 +230,7 @@ details{background:var(--panel);border:1px solid var(--stroke);border-radius:12p
   *{animation:none!important;transition:none!important}
 }
 
-/* Дополнительная доступность для тач-устройств:
-   если хотите сохранить крупный хит-таргет на сенсорных экранах, раскомментируйте блок ниже */
+/* Опционально: вернуть более крупный hit-area на тач-экранах */
 /*
 @media (pointer: coarse){
   .btn{ --btn-minh: 44px; --btn-py: 12px; --btn-px: 14px; --btn-font: 16px; }
