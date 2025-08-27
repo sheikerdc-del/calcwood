@@ -1,6 +1,4 @@
-yaml
 name: Build & Commit assets
-
 on:
   workflow_dispatch:
   push:
