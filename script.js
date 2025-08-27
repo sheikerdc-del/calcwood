@@ -1,11 +1,11 @@
 // Список калькуляторов (редактируйте при необходимости)
 const calculators = [
-  { id:'glue', name:'Калькулятор клея', url:'https://calcul-klei.onrender.com', desc:'Подбор количества клея для работ по дереву и отделке.', cover:'./covers/glue.webp' },
-  { id:'fcs', name:'Калькулятор ФКС', url:'https://calc-fcs.onrender.com', desc:'Расчеты для плитных материалов по стандартам ФКС.', cover:'./covers/fcs.webp' },
+  { id:'glue', name:'Калькулятор клея и раствора', url:'https://calcul-klei.onrender.com', desc:'Подбор количества клея для работ по кирпичу, плитке и керамограниту.', cover:'./covers/glue.webp' },
+  { id:'fcs', name:'Калькулятор крепежа для фиброцементного сайдинга', url:'https://calc-fcs.onrender.com', desc:'Расчеты крепежа и клямеров для ФЦС.', cover:'./covers/fcs.webp' },
   { id:'wood-weight', name:'Вес древесины', url:'https://kal-kuliator-vesa-drevesiny.onrender.com', desc:'Определение массы с учетом породы и влажности.', cover:'./covers/weight.webp' },
-  { id:'plank-3d', name:'Планка 3D', url:'https://planka3d.onrender.com', desc:'Визуализация и расчет 3D‑планки.', cover:'./covers/3d.webp' },
+  { id:'plank-3d', name:'Планка 3D', url:'https://planka3d.onrender.com', desc:'Визуализация и расчет фасонных элементов из металла.', cover:'./covers/3d.webp' },
   { id:'lumber', name:'Пиломатериалы', url:'https://calculator-pilomat.onrender.com', desc:'Объем, количество и стоимость пиломатериалов.', cover:'./covers/lumber.webp' },
-  { id:'fasteners', name:'Крепеж', url:'https://calculator-krepega.onrender.com', desc:'Подбор и расчет необходимого крепежа.', cover:'./covers/fasteners.webp' }
+  { id:'fasteners', name:'Крепеж', url:'https://calculator-krepega.onrender.com', desc:'Подбор и расчет необходимого крепежа под любой материал.', cover:'./covers/fasteners.webp' }
 ];
 
 // DOM-узлы
