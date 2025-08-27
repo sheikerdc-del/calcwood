@@ -1,5 +1,5 @@
-# .github/workflows/build-assets-commit.yml
-name: Build & Commit Web Assets
+yaml
+name: Build & Commit assets
 
 on:
   workflow_dispatch:
@@ -20,13 +20,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
@@ -35,13 +33,17 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install deps
+      # Генерируем lock-файл, чтобы npm ci не падал с EUSAGE
+      - name: Generate package-lock.json
+        run: npm install --package-lock-only
+
+      - name: Install deps (ci)
         run: npm ci
+        env:
+          SHARP_IGNORE_GLOBAL_LIBVIPS: '1'
 
       - name: Build assets
         run: npm run assets:all
-        env:
-          SHARP_IGNORE_GLOBAL_LIBVIPS: '1'
 
       - name: Commit generated assets and lockfile
         run: |
@@ -49,8 +51,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add icons hero.webp og-image.jpg covers package-lock.json
           if ! git diff --cached --quiet; then
-            git fetch origin
-            git rebase origin/"${GITHUB_REF_NAME}"
             git commit -m "chore(assets): update icons, covers, hero.webp, og-image.jpg, lockfile [skip ci]"
             git push
           else
