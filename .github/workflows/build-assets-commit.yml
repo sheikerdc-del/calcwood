@@ -10,7 +10,11 @@ on:
       - '.github/workflows/build-assets-commit.yml'
 
 permissions:
-  contents: write  # нужно для git push через GITHUB_TOKEN
+  contents: write
+
+concurrency:
+  group: build-assets-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -20,33 +24,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
-      # Создаём lock-файл, чтобы npm ci мог работать воспроизводимо
-      - name: Generate package-lock.json
-        run: npm install --package-lock-only
-
+      # Используем существующий lockfile для воспроизводимой сборки
       - name: Install deps
         run: npm ci
 
-      - name: Build icons
-        run: npm run assets:icons
-
-      - name: Build images
-        run: npm run assets:images
+      - name: Build assets
+        run: npm run assets:all
+        env:
+          SHARP_IGNORE_GLOBAL_LIBVIPS: '1'
 
       - name: Commit generated assets and lockfile
+        if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add icons hero.webp og-image.jpg covers package-lock.json
           if ! git diff --cached --quiet; then
-            git commit -m "chore(assets): generate icons, covers, hero.webp, og-image.jpg and add package-lock.json"
+            # Обновляем локальную ветку на случай конкурентных коммитов
+            git fetch origin
+            git rebase origin/"${GITHUB_REF_NAME}"
+            git commit -m "chore(assets): update icons, covers, hero.webp, og-image.jpg, lockfile [skip ci]"
             git push
           else
             echo "No changes to commit."
