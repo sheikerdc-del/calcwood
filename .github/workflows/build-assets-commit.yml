@@ -1,69 +1,49 @@
-name: Build assets ZIP and Release
+yaml
+name: Build & Commit Web Assets
 
 on:
-  push:
-    tags:
-      - 'assets-*'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Assets version (e.g., 1.0.0)'
-        required: true
-        default: '1.0.0'
+  push:
+    paths:
+      - 'src-svg/**'
+      - 'tools/**'
+      - 'package.json'
+      - '.github/workflows/build-assets-commit.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.meta.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Generate package-lock.json
+        run: npm install --package-lock-only
+
       - name: Install deps
         run: npm ci
 
-      - name: Determine version
-        id: meta
+      - name: Build icons
+        run: npm run assets:icons
+
+      - name: Build images
+        run: npm run assets:images
+
+      - name: Commit generated assets and lockfile
         run: |
-          if [ "${{ github.event_name }}" = "push" ]; then
-            VER="${{ github.ref_name }}"
-            VER="${VER#assets-v}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add icons hero.webp og-image.jpg covers package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: generate web assets and add package-lock.json"
+            git push
           else
-            VER="${{ inputs.version }}"
+            echo "No changes to commit."
           fi
-          echo "version=$VER" >> $GITHUB_OUTPUT
-
-      - name: Build assets
-        run: ASSETS_VERSION=v${{ steps.meta.outputs.version }} npm run assets:all
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: calcwood-assets
-          path: calcwood-assets-*.zip
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: calcwood-assets
-          path: .
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: assets-v${{ needs.build.outputs.version }}
-          name: CalcWood assets v${{ needs.build.outputs.version }}
-          body: "Автоматически сгенерированные активы (логотип, PWA-иконки, hero, обложки, checksums)."
-          files: calcwood-assets-*.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
