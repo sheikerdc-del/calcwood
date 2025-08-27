@@ -1,31 +1,77 @@
-const CACHE = 'calcwood-v1';
-const ASSETS = [
-  './','index.html','styles.css','script.js',
-  'logo.svg','hero.webp','og-image.jpg',
-  'covers/glue.webp','covers/fcs.webp','covers/weight.webp','covers/3d.webp','covers/lumber.webp','covers/fasteners.webp',
-  'icons/icon-32.png','icons/icon-192.png','icons/icon-512.png','icons/maskable-512.png'
+// Версию меняйте при изменении набора статических файлов
+const CACHE = 'calcwood-v3';
+
+const PRECACHE_URLS = [
+  './',
+  './index.html',
+  './styles.css',
+  './script.js',
+  './manifest.webmanifest',
+  './hero.webp',
+  './og-image.jpg',
+  // Иконки
+  './icons/icon-32.png',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/maskable-512.png',
+  './icons/favicon.ico',
+  // Каверы
+  './covers/glue.webp',
+  './covers/fcs.webp',
+  './covers/weight.webp',
+  './covers/3d.webp',
+  './covers/lumber.webp',
+  './covers/fasteners.webp',
+  // Лого (если у вас оно в корне, иначе удалите/исправьте)
+  './logo.svg'
 ];
 
-self.addEventListener('install', e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
-  self.skipWaiting();
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE_URLS)).then(() => self.skipWaiting())
+  );
 });
-self.addEventListener('activate', e=>{
-  e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
-  self.clients.claim();
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      // Удаляем старые кэши
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => (k !== CACHE ? caches.delete(k) : Promise.resolve())));
+      await self.clients.claim();
+    })()
+  );
 });
-self.addEventListener('fetch', e=>{
-  const req = e.request, url = new URL(req.url);
-  if(url.origin !== self.location.origin) return;
-  if(req.mode === 'navigate'){
-    e.respondWith(fetch(req).then(res=>{
-      caches.open(CACHE).then(c=>c.put('index.html', res.clone()));
-      return res;
-    }).catch(()=>caches.match('index.html')));
-    return;
+
+// Помощник: stale-while-revalidate для запросов того же origin
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(request);
+  const networkFetch = fetch(request).then((response) => {
+    // Успешный ответ — обновим кэш
+    if (response && response.status === 200 && response.type !== 'opaque') {
+      cache.put(request, response.clone());
+    }
+    return response;
+  }).catch(() => null);
+
+  // Отдаём кэш сразу, если есть, иначе ждём сеть
+  return cached || networkFetch;
+}
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  // Только GET
+  if (request.method !== 'GET') return;
+
+  // Не трогаем кросс-оригин (калькуляторы на onrender.com и т.п.)
+  try {
+    const url = new URL(request.url);
+    if (url.origin !== self.location.origin) return;
+
+    // Для нашей статики — stale-while-revalidate
+    event.respondWith(staleWhileRevalidate(request));
+  } catch {
+    // В случае недопарсенного URL просто игнорируем
   }
-  e.respondWith(caches.match(req).then(c=>c || fetch(req).then(res=>{
-    caches.open(CACHE).then(cache=>cache.put(req, res.clone()));
-    return res;
-  })));
 });
