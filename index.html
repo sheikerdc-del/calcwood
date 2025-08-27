@@ -32,7 +32,7 @@
   <!-- Preloads -->
   <link rel="preload" href="./styles.css" as="style">
   <link rel="preload" href="./hero.webp" as="image" imagesrcset="./hero.webp" imagesizes="100vw">
-  <link rel="preload" href="./sprite.svg" as="image" imagesrcset="./sprite.svg">
+  <link rel="preload" href="./sprite.svg" as="image">
 
   <link href="./styles.css" rel="stylesheet">
 </head>
@@ -51,12 +51,7 @@
         <a href="#faq">FAQ</a>
         <a href="./privacy.html">Политика</a>
         <a href="./terms.html">Условия</a>
-        <button id="themeToggle" class="btn ghost" aria-label="Переключить тему" aria-pressed="false">
-          <svg id="themeIcon" class="icon md" aria-hidden="true" focusable="false">
-            <use href="./sprite.svg#icon-moon"></use>
-          </svg>
-          Тёмная тема
-        </button>
+        <!-- Переключатель темы удален по ТЗ -->
       </nav>
     </div>
   </header>
@@ -69,7 +64,7 @@
           <p>Быстрые и точные расчеты прямо в браузере. Открывайте в 1 клик, работайте на любом устройстве.</p>
           <div class="cta" role="group" aria-label="Быстрые действия">
             <a href="#calculators" class="btn primary">Выбрать калькулятор</a>
-            <a href="#benefits" class="btn ghost">Почему мы</a>
+            <a href="#benefits" class="btn">Почему мы</a>
           </div>
         </div>
         <div class="hero-art" aria-hidden="true">
@@ -96,7 +91,7 @@
 
         <form id="filterForm" class="filter" role="search" aria-label="Фильтр калькуляторов">
           <input id="search" name="q" type="search" placeholder="Поиск по названию или описанию..." aria-label="Поиск" autocomplete="off" />
-          <button type="reset" class="btn ghost" aria-label="Сбросить поиск">
+          <button type="reset" class="btn" aria-label="Сбросить поиск">
             <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-reset"></use></svg>
             Сброс
           </button>
@@ -117,6 +112,7 @@
           Статусы обновляются автоматически. «Онлайн» — калькулятор доступен; «Оффлайн» — временно недоступен.
         </p>
 
+        <!-- Шаблон карточки: статус закреплён в самом низу через .card__bottom -->
         <template id="cardTemplate">
           <article class="card" role="listitem">
             <div class="card__media">
@@ -125,16 +121,19 @@
             <div class="card__body">
               <h3 data-title></h3>
               <p data-desc></p>
-              <span class="status" role="status" aria-live="polite" data-status>Проверка...</span>
-              <div class="card__actions">
-                <button class="btn primary" data-action="open" data-open>
-                  <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-calc"></use></svg>
-                  Открыть
-                </button>
-                <a class="btn ghost" target="_blank" rel="noopener noreferrer" data-ext>
-                  <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-external"></use></svg>
-                  В новой вкладке
-                </a>
+
+              <div class="card__bottom">
+                <div class="card__actions">
+                  <button class="btn primary" data-action="open" data-open>
+                    <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-calc"></use></svg>
+                    Открыть
+                  </button>
+                  <a class="btn" target="_blank" rel="noopener noreferrer" data-ext>
+                    <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-external"></use></svg>
+                    В новой вкладке
+                  </a>
+                </div>
+                <span class="status" role="status" aria-live="polite" data-status>Проверка...</span>
               </div>
             </div>
           </article>
@@ -189,7 +188,7 @@
       <header class="modal__header">
         <h3 id="modalTitle">Калькулятор</h3>
         <div class="modal__tools">
-          <button id="copyLink" class="btn ghost" aria-label="Скопировать ссылку на этот калькулятор">
+          <button id="copyLink" class="btn" aria-label="Скопировать ссылку на этот калькулятор">
             <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-copy"></use></svg>
             Скопировать ссылку
           </button>
@@ -218,7 +217,7 @@
         </div>
       </div>
       <footer class="modal__footer">
-        <a id="openExternalFooter" class="btn ghost" target="_blank" rel="noopener noreferrer">
+        <a id="openExternalFooter" class="btn" target="_blank" rel="noopener noreferrer">
           <svg class="icon md" aria-hidden="true" focusable="false"><use href="./sprite.svg#icon-external"></use></svg>
           В новой вкладке
         </a>

@@ -5,16 +5,33 @@
   <title>Нет подключения — CalcWood</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0f14">
+  <meta name="description" content="Вы офлайн. Страница загружена из кэша CalcWood. Проверьте соединение и обновите страницу.">
+  <meta name="robots" content="noindex">
   <link rel="stylesheet" href="./styles.css">
   <style>
+    /* Минимальные офлайн-стили на случай, если общий CSS недоступен */
+    :root{--bg:#0b0f14;--panel:#111821;--stroke:#1d2836;--txt:#e6eef8;--accent:#6ea0ff}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
     main{min-height:60vh;display:grid;place-items:center}
     .offline{max-width:560px;margin:0 auto;background:var(--panel);border:1px solid var(--stroke);border-radius:12px;padding:18px}
+    .site-header{position:sticky;top:0;background:rgba(11,15,20,.8);border-bottom:1px solid var(--stroke)}
+    .container{max-width:1080px;margin:0 auto;padding:0 16px}
+    .header-wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+    .brand{display:inline-flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+    .icon{display:inline-block;width:24px;height:24px;vertical-align:-0.15em}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid var(--stroke);background:#0f1722;color:var(--txt);font-weight:600;line-height:1;min-height:44px;text-decoration:none}
+    .btn.primary{background:#17222d;border-color:#223042}
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-wrap">
-      <a href="./" class="brand"><img src="./logo.svg" alt="" width="32" height="32"><span>CalcWood</span></a>
+      <a href="./" class="brand" aria-label="На главную CalcWood">
+        <svg class="icon" aria-hidden="true" focusable="false">
+          <use href="./sprite.svg#logo-calcwood"></use>
+        </svg>
+        <span>CalcWood</span>
+      </a>
     </div>
   </header>
   <main>

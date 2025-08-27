@@ -2,10 +2,16 @@
   "name": "calcwood-site",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=18.17"
+  },
   "scripts": {
     "assets:icons": "node tools/build-icons.mjs",
     "assets:images": "node tools/build-images.mjs",
-    "assets:all": "npm run assets:icons && npm run assets:images"
+    "assets:all": "npm run assets:icons && npm run assets:images",
+    "clean": "node -e \"import('fs').then(fs=>{['icons','covers'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch{}})})\"",
+    "build": "npm run assets:all",
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "sharp": "^0.33.4"

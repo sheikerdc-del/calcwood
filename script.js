@@ -19,7 +19,6 @@ const openExternalFooter = document.getElementById('openExternalFooter');
 const copyLinkBtn = document.getElementById('copyLink');
 const frameWrap = document.getElementById('frameWrap');
 const frameNotice = document.getElementById('frameNotice');
-const themeBtn = document.getElementById('themeToggle');
 const filterForm = document.getElementById('filterForm');
 const searchInput = document.getElementById('search');
 let lastFocused = null;
@@ -35,7 +34,8 @@ function renderCards(list) {
     article.dataset.id = c.id;
 
     const img = node.querySelector('[data-cover]');
-    img.src = c.cover; img.alt = c.name;
+    img.src = c.cover;
+    img.alt = c.name;
 
     node.querySelector('[data-title]').textContent = c.name;
     node.querySelector('[data-desc]').textContent = c.desc;
@@ -85,14 +85,13 @@ filterForm?.addEventListener('reset', () => {
   setTimeout(applyFilter, 0);
 });
 
-// Delegated clicks
+// Delegated clicks (только кнопка "Открыть", ссылка в новой вкладке работает сама по себе)
 cardsRoot.addEventListener('click', (e)=>{
   const btn = e.target.closest('[data-action]');
   if(!btn) return;
   const card = btn.closest('.card');
   const id = card?.dataset.id;
-  const calc = calculators.find(x=>x.id === id);
-  if(!calc) return;
+  if(!id) return;
   e.preventDefault();
   openById(id, true);
 });
@@ -106,7 +105,11 @@ function openModal(title, url){
   // iframe loading state
   frameWrap.setAttribute('aria-busy','true');
   frameNotice.hidden = true;
+
+  // Сброс предыдущего состояния iframe
+  iframe.onload = null;
   iframe.removeAttribute('src');
+
   // Таймаут на случай CSP/frame-ancestors или сетевых проблем
   clearTimeout(iframeTimeoutId);
   iframeTimeoutId = setTimeout(() => {
@@ -129,13 +132,19 @@ function openModal(title, url){
 function closeModal(){
   modal.hidden = true;
   document.body.style.overflow = '';
+  iframe.onload = null;
   iframe.removeAttribute('src');
   clearTimeout(iframeTimeoutId);
   if(lastFocused) lastFocused.focus();
   if(location.hash.startsWith('#calc/')) history.replaceState(null, '', '#');
 }
-modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) closeModal(); });
-window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && !modal.hidden) closeModal(); });
+// Закрытие по клику: у оверлея и крестика стоит data-close
+modal.addEventListener('click', (e)=>{
+  if(e.target.hasAttribute('data-close')) closeModal();
+});
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && !modal.hidden) closeModal();
+});
 
 // Focus trap in modal
 modal.addEventListener('keydown', (e)=>{
@@ -154,6 +163,7 @@ copyLinkBtn?.addEventListener('click', async ()=>{
   const url = `${location.origin}${location.pathname}#calc/${m[1]}`;
   try {
     await navigator.clipboard.writeText(url);
+    // Внимание: ниже мы затираем иконку. Если хотите сохранить иконку — замените только текстовый узел или используйте aria-live.
     copyLinkBtn.textContent = 'Ссылка скопирована';
     setTimeout(()=>copyLinkBtn.textContent='Скопировать ссылку', 2000);
   } catch {
@@ -183,22 +193,22 @@ window.addEventListener('DOMContentLoaded', handleHash);
 async function pingHost(url, timeout = 6000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
+  const origin = new URL(url).origin;
   try {
-    const u = new URL(url);
-    const probe = `${u.origin}/?probe=${Date.now()}`;
+    const probe = `${origin}/?probe=${Date.now()}`;
     await fetch(probe, { mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
     clearTimeout(timer);
     return true;
   } catch {
     clearTimeout(timer);
+    // Fallback через загрузку favicon
     try {
       await new Promise((resolve, reject) => {
         const t = setTimeout(() => reject(new Error('img-timeout')), timeout);
         const img = new Image();
         img.onload = () => { clearTimeout(t); resolve(); };
         img.onerror = () => { clearTimeout(t); reject(new Error('img-error')); };
-        const u = new URL(url);
-        img.src = `${u.origin}/favicon.ico?_=${Date.now()}`;
+        img.src = `${origin}/favicon.ico?_=${Date.now()}`;
       });
       return true;
     } catch {
@@ -229,27 +239,5 @@ async function checkCalculators(list = calculators, intervalMs) {
 // initial and periodic checks
 checkCalculators(calculators, 120000);
 
-// Theme toggle with aria-pressed and dynamic theme-color
-(function themeInit(){
-  const key='theme', btn=themeBtn, root=document.documentElement;
-  function apply(theme){
-    if(theme){ root.setAttribute('data-theme', theme); } else { root.removeAttribute('data-theme'); }
-    const isDark = (theme==='dark') || (!theme && matchMedia('(prefers-color-scheme: dark)').matches);
-    btn.textContent = isDark ? 'Светлая тема' : 'Тёмная тема';
-    btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-    let meta = document.querySelector('meta[name="theme-color"]');
-    if(!meta){ meta = document.createElement('meta'); meta.name='theme-color'; document.head.appendChild(meta); }
-    meta.content = isDark ? '#0b0f14' : '#ffffff';
-  }
-  const stored = localStorage.getItem(key);
-  apply(stored || null);
-  btn.addEventListener('click', ()=>{
-    const current = root.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : current === 'light' ? null : 'dark';
-    if(next) localStorage.setItem(key, next); else localStorage.removeItem(key);
-    apply(next);
-  });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{
-    if(!localStorage.getItem(key)) apply(null);
-  });
-})();
+// Переключатель темы удалён. Вся тема — статическая тёмная, цвета задаются в CSS.
+/* Конец файла */
