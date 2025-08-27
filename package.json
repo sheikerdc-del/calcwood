@@ -1,3 +1,4 @@
+// package.json
 {
   "name": "calcwood-site",
   "private": true,
@@ -9,11 +10,11 @@
     "assets:icons": "node tools/build-icons.mjs",
     "assets:images": "node tools/build-images.mjs",
     "assets:all": "npm run assets:icons && npm run assets:images",
-    "clean": "node -e \"import('fs').then(fs=>{['icons','covers'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch{}})})\"",
     "build": "npm run assets:all",
     "prepare": "npm run build"
   },
   "devDependencies": {
+    "png-to-ico": "^3.0.0",
     "sharp": "^0.33.4"
   }
 }

@@ -1,17 +1,29 @@
+<!-- terms.html -->
 <!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Пользовательское соглашение — CalcWood</title>
+  <title>Условия использования — CalcWood</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="./styles.css" rel="stylesheet">
+  <meta name="theme-color" content="#0b0f14">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Пользовательское соглашение</h1>
-    <p>Сервис предоставляется «как есть». Мы стремимся к точности расчетов, однако не несем ответственности за возможные ошибки и последствия их использования.</p>
-    <p>Используя сайт, вы соглашаетесь с тем, что внешние калькуляторы работают на сторонних платформах и могут быть временно недоступны.</p>
-    <p><a class="btn ghost" href="./">← На главную</a></p>
-  </div>
+  <header class="site-header">
+    <div class="container header-wrap">
+      <a href="./" class="brand" aria-label="На главную CalcWood">
+        <svg class="icon" aria-hidden="true"><use href="./sprite.svg#logo-calcwood"></use></svg>
+        <strong>CalcWood</strong>
+      </a>
+    </div>
+  </header>
+  <main class="container" style="padding:20px 0">
+    <h1>Условия использования</h1>
+    <p>Используя данный лендинг и внешние калькуляторы, вы соглашаетесь с тем, что они предоставляются «как есть» без гарантий. Ответственность за результаты расчётов несёт пользователь.</p>
+    <h2>Ограничения</h2>
+    <p>Внешние сайты калькуляторов управляются третьими лицами. Мы не контролируем их доступность и точность.</p>
+    <h2>Обратная связь</h2>
+    <p>Сообщайте о проблемах и предложениях через Issues в репозитории GitHub.</p>
+  </main>
 </body>
 </html>

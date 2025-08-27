@@ -1,3 +1,4 @@
+// script.js
 // Данные калькуляторов
 const calculators = [
   { id:'glue', name:'Калькулятор клея и раствора', url:'https://calcul-klei.onrender.com', desc:'Расчет количества клея, раствора для работ с плиткой, керамогранитом и кирпичом.', cover:'./covers/glue.webp' },
@@ -61,7 +62,7 @@ function renderCards(list) {
   cardsRoot.setAttribute('aria-busy', 'false');
 }
 
-// Initial render with skeleton removal
+// Initial render
 function initRender() {
   renderCards(calculators);
 }
@@ -75,7 +76,7 @@ function applyFilter() {
         c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q))
     : calculators;
   renderCards(list);
-  // После перерендера — обновим статусы для видимых карточек
+  // После ререндера — обновим статусы для видимых карточек
   checkCalculators(list);
 }
 filterForm?.addEventListener('input', (e) => {
@@ -85,7 +86,7 @@ filterForm?.addEventListener('reset', () => {
   setTimeout(applyFilter, 0);
 });
 
-// Delegated clicks (только кнопка "Открыть", ссылка в новой вкладке работает сама по себе)
+// Delegated clicks
 cardsRoot.addEventListener('click', (e)=>{
   const btn = e.target.closest('[data-action]');
   if(!btn) return;
@@ -126,7 +127,7 @@ function openModal(title, url){
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
   lastFocused = document.activeElement;
-  const closeBtn = modal.querySelector('.icon-btn[data-close]');
+  const closeBtn = modal.querySelector('.icon-btn[data-close], [data-close].icon-btn');
   if (closeBtn) closeBtn.focus();
 }
 function closeModal(){
@@ -138,7 +139,7 @@ function closeModal(){
   if(lastFocused) lastFocused.focus();
   if(location.hash.startsWith('#calc/')) history.replaceState(null, '', '#');
 }
-// Закрытие по клику: у оверлея и крестика стоит data-close
+// Закрытие по клику: у оверлея и кнопок стоит data-close
 modal.addEventListener('click', (e)=>{
   if(e.target.hasAttribute('data-close')) closeModal();
 });
@@ -163,11 +164,9 @@ copyLinkBtn?.addEventListener('click', async ()=>{
   const url = `${location.origin}${location.pathname}#calc/${m[1]}`;
   try {
     await navigator.clipboard.writeText(url);
-    // Внимание: ниже мы затираем иконку. Если хотите сохранить иконку — замените только текстовый узел или используйте aria-live.
     copyLinkBtn.textContent = 'Ссылка скопирована';
     setTimeout(()=>copyLinkBtn.textContent='Скопировать ссылку', 2000);
   } catch {
-    // Фолбэк
     prompt('Скопируйте ссылку:', url);
   }
 });
@@ -201,7 +200,6 @@ async function pingHost(url, timeout = 6000) {
     return true;
   } catch {
     clearTimeout(timer);
-    // Fallback через загрузку favicon
     try {
       await new Promise((resolve, reject) => {
         const t = setTimeout(() => reject(new Error('img-timeout')), timeout);
@@ -238,6 +236,3 @@ async function checkCalculators(list = calculators, intervalMs) {
 }
 // initial and periodic checks
 checkCalculators(calculators, 120000);
-
-// Переключатель темы удалён. Вся тема — статическая тёмная, цвета задаются в CSS.
-/* Конец файла */

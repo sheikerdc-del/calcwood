@@ -1,16 +1,42 @@
+// tools/build-images.mjs
 import sharp from "sharp";
 import fs from "node:fs/promises";
 
 await fs.mkdir("covers", { recursive: true });
 
+const THEME_BG = { r: 11, g: 15, b: 20, alpha: 1 }; // #0b0f14
+
+function sharpFromSvg(src, density = 220) {
+  return sharp(src, { density, sequentialRead: true, limitInputPixels: false });
+}
+
 async function toWebp(src, width, height, out) {
-  await sharp(src).resize(width, height, { fit: "cover" }).webp({ quality: 78, effort: 5 }).toFile(out);
-  console.log("webp:", out);
+  try {
+    await sharpFromSvg(src)
+      .resize(width, height, { fit: "cover", kernel: sharp.kernel.lanczos3, fastShrinkOnLoad: true })
+      .toColourspace("srgb")
+      .webp({ quality: 82, effort: 6 })
+      .toFile(out);
+    console.log("webp:", out);
+  } catch (err) {
+    console.error("WEBP error:", out, err);
+    throw err;
+  }
 }
 
 async function toJpg(src, width, height, out) {
-  await sharp(src).resize(width, height, { fit: "cover" }).jpeg({ quality: 82, mozjpeg: true }).toFile(out);
-  console.log("jpg:", out);
+  try {
+    await sharpFromSvg(src)
+      .resize(width, height, { fit: "cover", kernel: sharp.kernel.lanczos3, fastShrinkOnLoad: true })
+      .flatten({ background: THEME_BG })
+      .toColourspace("srgb")
+      .jpeg({ quality: 85, mozjpeg: true, chromaSubsampling: "4:4:4", progressive: true })
+      .toFile(out);
+    console.log("jpg:", out);
+  } catch (err) {
+    console.error("JPG error:", out, err);
+    throw err;
+  }
 }
 
 // Hero и OG

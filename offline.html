@@ -1,3 +1,4 @@
+<!-- offline.html -->
 <!doctype html>
 <html lang="ru">
 <head>
@@ -9,7 +10,6 @@
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="./styles.css">
   <style>
-    /* Минимальные офлайн-стили на случай, если общий CSS недоступен */
     :root{--bg:#0b0f14;--panel:#111821;--stroke:#1d2836;--txt:#e6eef8;--accent:#6ea0ff}
     html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
     main{min-height:60vh;display:grid;place-items:center}
@@ -38,7 +38,7 @@
     <div class="offline">
       <h1>Нет подключения к интернету</h1>
       <p>Страница открыта из кэша. Некоторые функции могут быть недоступны. Проверьте сеть и обновите страницу.</p>
-      <p><a class="btn primary" href="./">На главную</a></p>
+      <p><a class="btn primary" href="./" onclick="location.reload();return false;">Обновить</a></p>
     </div>
   </main>
 </body>
