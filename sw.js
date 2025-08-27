@@ -1,6 +1,6 @@
 // sw.js
 // Увеличивайте версию при каждом изменении набора статики
-const CACHE = 'calcwood-v9';
+const CACHE = 'calcwood-v11';
 
 // Обязательные ресурсы (критично для работы оффлайн-лендинга)
 const PRECACHE_REQUIRED = [
