@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sheikerdc-del.github.io/calcwood/sitemap.xml
