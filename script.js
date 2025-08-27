@@ -87,31 +87,57 @@ function handleHash(){
 window.addEventListener('hashchange', handleHash);
 window.addEventListener('DOMContentLoaded', handleHash);
 
-// Индикатор онлайн/оффлайн (по favicon)
-function pingHost(url, timeout=6000){
-  return new Promise(resolve=>{
-    const img = new Image(); let done = false;
-    const timer = setTimeout(()=>{ if(!done){ done=true; img.src=''; resolve(false); } }, timeout);
-    img.onload = ()=>{ if(!done){ done=true; clearTimeout(timer); resolve(true); } };
-    img.onerror = ()=>{ if(!done){ done=true; clearTimeout(timer); resolve(false); } };
-    try { const u = new URL(url); img.src = `${u.origin}/favicon.ico?ping=${Date.now()}`; }
-    catch { resolve(false); }
-  });
+// Более устойчивый "пинг": считаем ONLINE, если есть сетевое соединение до origin.
+// 1) Пытаемся сделать fetch в no-cors (успех = промис resolve).
+// 2) Фолбэк: Image-пинг (успех = onload, но часто favicon отсутствует — это ок, у нас есть fetch).
+async function pingHost(url, timeout = 6000) {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    // Делаем запрос на корень с cache-busting, no-cors
+    const u = new URL(url);
+    const probe = `${u.origin}/?probe=${Date.now()}`;
+    // В no-cors промис резолвится даже при непрозрачном (“opaque”) ответе — это и есть наш сигнал "онлайн".
+    await fetch(probe, { mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
+    clearTimeout(t);
+    return true;
+  } catch {
+    clearTimeout(t);
+    // Фолбэк через Image: иногда fetch может падать из-за редких сетевых ограничений.
+    try {
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('img-timeout')), timeout);
+        const img = new Image();
+        img.onload = () => { clearTimeout(timer); resolve(); };
+        img.onerror = () => { clearTimeout(timer); reject(new Error('img-error')); };
+        const u = new URL(url);
+        img.src = `${u.origin}/favicon.ico?_=${Date.now()}`;
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
-async function checkAllCalculators(intervalMs=120000){
-  async function run(){
-    for(const c of calculators){
+
+async function checkAllCalculators(intervalMs = 120000) {
+  async function run() {
+    const tasks = calculators.map(async (c) => {
       const ok = await pingHost(c.url, 6000);
       const el = document.querySelector(`.card[data-id="${c.id}"] .status`);
-      if(!el) continue;
+      if (!el) return;
       el.textContent = ok ? 'Онлайн' : 'Оффлайн';
       el.classList.toggle('status--up', ok);
       el.classList.toggle('status--down', !ok);
-    }
+      // Доступное описание для скринридеров
+      el.setAttribute('aria-label', ok ? `${c.name}: доступен` : `${c.name}: недоступен`);
+    });
+    await Promise.allSettled(tasks);
   }
-  await run(); setInterval(run, intervalMs);
+  await run();
+  setInterval(run, intervalMs);
 }
-checkAllCalculators();
 
 // Тёмная/светлая тема
 (function themeInit(){
