@@ -4,8 +4,4 @@ yarn-error.log*
 dist
 *.zip
 .DS_Store
-icons
-covers
-hero.webp
-og-image.jpg
 checksums.txt
