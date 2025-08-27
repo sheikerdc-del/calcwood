@@ -1,4 +1,3 @@
-yaml
 name: Build & Commit Web Assets
 
 on:
@@ -10,9 +9,13 @@ on:
       - 'package.json'
       - '.github/workflows/build-assets-commit.yml'
 
+permissions:
+  contents: write  # нужно для git push через GITHUB_TOKEN
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +27,7 @@ jobs:
         with:
           node-version: '20'
 
+      # Создаём lock-файл, чтобы npm ci мог работать воспроизводимо
       - name: Generate package-lock.json
         run: npm install --package-lock-only
 
@@ -42,7 +46,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add icons hero.webp og-image.jpg covers package-lock.json
           if ! git diff --cached --quiet; then
-            git commit -m "chore: generate web assets and add package-lock.json"
+            git commit -m "chore(assets): generate icons, covers, hero.webp, og-image.jpg and add package-lock.json"
             git push
           else
             echo "No changes to commit."
