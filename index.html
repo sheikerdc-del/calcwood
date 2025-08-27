@@ -6,17 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Бесплатные онлайн-калькуляторы: клей, ФКС, вес древесины, планка 3D, пиломатериалы, крепеж. Быстро и точно, работает на мобильных.">
   <link rel="canonical" href="https://sheikerdc-del.github.io/calcwood/">
+
+  <!-- Open Graph -->
   <meta property="og:title" content="CalcWood — онлайн‑калькуляторы для дерева и крепежа">
   <meta property="og:description" content="Расчеты в 1 клик: клей, ФКС, вес, планка 3D, пиломатериалы, крепеж.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sheikerdc-del.github.io/calcwood/">
   <meta property="og:image" content="https://sheikerdc-del.github.io/calcwood/og-image.jpg">
+
   <meta name="theme-color" content="#0b0f14">
 
+  <!-- Icons/Manifest -->
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" type="image/svg+xml" href="./logo.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="icon" href="./icons/favicon.ico">
 
   <link href="./styles.css" rel="stylesheet">
 </head>
@@ -43,7 +46,7 @@
       <div class="container hero-wrap">
         <div class="hero-text">
           <h1 id="heroTitle">Онлайн‑калькуляторы для древесины, пиломатериалов и крепежа</h1>
-          <p>Быстрые и точные расчеты прямо в браузере. Открывайте в 1 клик, работайте на любом устройстве.</p>
+        <p>Быстрые и точные расчеты прямо в браузере. Открывайте в 1 клик, работайте на любом устройстве.</p>
           <div class="cta" role="group" aria-label="Быстрые действия">
             <a href="#calculators" class="btn primary">Выбрать калькулятор</a>
             <a href="#benefits" class="btn ghost">Почему мы</a>
@@ -71,8 +74,7 @@
       <div class="container">
         <h2 id="calculatorsTitle">Калькуляторы</h2>
 
-        <!-- Контейнер списка: динамически наполняется из script.js -->
-        <!-- ARIA: role=list + aria-live для озвучивания появления карточек и смены статусов -->
+        <!-- Контейнер списка -->
         <div
           id="cards"
           class="grid"
@@ -84,6 +86,24 @@
         <p id="calcStatusNote" class="visually-hidden">
           Статусы обновляются автоматически. «Онлайн» — калькулятор доступен; «Оффлайн» — временно недоступен.
         </p>
+
+        <!-- Шаблон карточки -->
+        <template id="cardTemplate">
+          <article class="card" role="listitem">
+            <div class="card__media">
+              <img data-cover alt="" loading="lazy" decoding="async" width="1200" height="675">
+            </div>
+            <div class="card__body">
+              <h3 data-title></h3>
+              <p data-desc></p>
+              <span class="status" role="status" aria-live="polite" data-status>Проверка...</span>
+              <div class="card__actions">
+                <button class="btn primary" data-action="open" data-open>Открыть</button>
+                <a class="btn ghost" target="_blank" rel="noopener noreferrer" data-ext>В новой вкладке</a>
+              </div>
+            </div>
+          </article>
+        </template>
       </div>
     </section>
 
@@ -238,7 +258,7 @@
   }
   </script>
 
-  <!-- Микроразметка JSON-LD: FAQ (сохранена) -->
+  <!-- Микроразметка JSON-LD: FAQ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -251,12 +271,5 @@
     ]
   }
   </script>
-
-  <!-- Вспомогательный класс для скрытого текста только для скринридеров -->
-  <style>
-    .visually-hidden{
-      position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0
-    }
-  </style>
 </body>
 </html>
